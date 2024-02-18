@@ -90,9 +90,9 @@ const generateMarkdown = (answers) => {
   ## Table of Contents
   - [Installation](#installation)
   - [Usage](#usage)
-  - [Tests](#tests)
   ${generateLink(answers.license)}
   - [Contributing](#contributing)
+  - [Tests](#tests)
   - [Questions](#questions)
 
   ## Installation
@@ -101,13 +101,13 @@ const generateMarkdown = (answers) => {
   ## Usage
   ${answers.usage}
 
-  ## Tests
-  ${answers.tests}
-
   ${generateSection(answers.license)}
 
-  ## Contributions
+  ## Contributing
   ${answers.contributing}
+
+  ## Tests
+  ${answers.tests}
 
   ## Questions
   If you have any questions you can email me at ${answers.email} and if you want to see more of my work you can visit my github page at [${answers.github}](https://github.com/${answers.github})
