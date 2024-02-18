@@ -15,6 +15,11 @@ const promptUser = () => {
         },
         {
             type: 'input',
+            name: 'description',
+            message: 'Add a description of your project.'
+        },
+        {
+            type: 'input',
             name: 'email',
             message: 'What is your email address?'
         },
@@ -29,9 +34,11 @@ const promptUser = () => {
             message: 'Provide instructions and examples for use.'
         },
         {
-            type: 'input',
-            name: 'licence',
-            message: 'Provide information on the licence for your project.'
+            type: 'list',
+            name: 'license',
+            message: 'Provide information on the license for your project.',
+            choices: ["MIT license", "Apache 2.0", "BSD 3", "None"]
+
         },
         {
             type: 'input',
@@ -45,39 +52,72 @@ const promptUser = () => {
         },
         {
             type: 'input',
-            name: 'questions',
-            message: 'Add any questions.'
+            name: 'github',
+            message: 'Provide your GitHub username.'
         },
     ])
 };
 
+const generateBadge = (license) => {
+    if (license !== "None") {
+    return ` ![Github license](https://img.shields.io/badge/license-${license.replace(/ /g,'%20')}-blue.svg)`;
+    }
+    return ``
+}
+
+const generateLink = (license) => {
+    if (license !== "None") {
+    return `- [license](#license)`;
+    }
+    return ``
+}
+
+const generateSection = (license) => {
+    if (license !== "None") {
+    return `## license\nThis project is licensed under the ${license} license.`;
+    }
+    return ``
+}
+
 //function to write a README file
-const generateHTML = (answers) =>
-  `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-  <title>Document</title>
-</head>
-<body>
-  <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-  <div class="container-fluid py-5">
-    <h1 class="display-5 fw-bold">${answers.title}</h1>
-    <p class="col-md-8 fs-4">I am from ${answers.location}.</p>
-    <h3>Example heading <span class="badge badge-secondary">Contact Me</span></h3>
-    <ul class="list-group">
-      <li class="list-group-item">My GitHub username is ${answers.github}</li>
-      <li class="list-group-item">LinkedIn: ${answers.linkedin}</li>
-    </ul>
-  </div>
-</div>
-</body>
-</html>`;
+const generateMarkdown = (answers) => {
+  return `# ${answers.title}
+  ${generateBadge(answers.license)}
+  
+  ## Description
+  ${answers.description}
+  
+  ## Table of Contents
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Tests](#tests)
+  ${generateLink(answers.license)}
+  - [Contributing](#contributing)
+  - [Questions](#questions)
+
+  ## Installation
+  ${answers.installation}
+
+  ## Usage
+  ${answers.usage}
+
+  ## Tests
+  ${answers.tests}
+
+  ${generateSection(answers.license)}
+
+  ## Contributions
+  ${answers.contributing}
+
+  ## Questions
+  If you have any questions you can email me at ${answers.email} and if you want to see more of my work you can visit my github page at [${answers.github}](https://github.com/${answers.github})
+
+  `
+}
+;
 
 promptUser()
-  .then((answers) => writeFileAsync('index.html', generateHTML(answers)))
-  .then(() => console.log('Successfully wrote to index.html'))
+  .then((answers) => writeFileAsync('dist/README.md', generateMarkdown(answers)))
+  .then(() => console.log('Your README is ready!'))
   .catch((err) => console.error(err));
 
